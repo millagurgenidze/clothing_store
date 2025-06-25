@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="fa-solid fa-cart-shopping"></i> Your Cart</h2>
+
+    {% if cart %}
+        {% for item in cart %}
+        <div class="card mb-3">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-3">
+                  <img src="{{ url_for('static', filename=item.product.images[0].image_url) if item.product.images else url_for('static', filename='placeholder.jpg') }}"
+                    class="img-fluid rounded-start" alt="{{ item.product.name }}">
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.product.name }}</h5>
+                        <p class="card-text"><strong>Size:</strong> {{ item.size }} &nbsp; <strong>Color:</strong> {{ item.color }}</p>
+                        <p class="card-text"><strong>Quantity:</strong> {{ item.quantity }}</p>
+                        <p class="text-success fw-bold">Item Total: ${{ "%.2f"|format(item.product.price * item.quantity) }}</p>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center">
+                   <form method="POST" action="{{ url_for('remove_item', item_id=item.id) }}" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger mt-2" onclick="return confirm('Remove this item from cart?');">
+                            <i class="fa-solid fa-trash"></i> Remove
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="card p-3 mb-4">
+            <h5>Order Summary</h5>
+            <p>Subtotal: ${{ "%.2f"|format(subtotal) }}</p>
+            <p>Tax (10%): ${{ "%.2f"|format(tax) }}</p>
+            <p>Shipping: ${{ "%.2f"|format(shipping) }}</p>
+            <hr>
+            <h4>Total: ${{ "%.2f"|format(total) }}</h4>
+        </div>
+
+        <div class="card p-4 shadow-sm mb-5">
+            <h4>Shipping Information</h4>
+            <form method="POST" action="{{ url_for('checkout') }}">
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="shipping_name" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Phone Number</label>
+                    <input type="text" name="phone" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Street Address</label>
+                    <input type="text" name="street" class="form-control" required />
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Country</label>
+                        <input type="text" name="country" class="form-control" required />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Zip / Postal Code</label>
+                    <input type="text" name="postal_code" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-success w-100">
+                    <i class="fa-solid fa-credit-card"></i> Place Order (Use Wallet Balance)
+                </button>
+            </form>
+        </div>
+
+    {% else %}
+        <div class="text-center mt-5">
+            <p class="text-muted">
+                <i class="fa-solid fa-cart-shopping fa-3x mb-3"></i><br />
+                Your cart is empty!
+            </p>
+            <a href="{{ url_for('home') }}" class="btn btn-primary">Back to Products</a>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

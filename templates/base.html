@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Home - Mila's Clothing</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        .product-card {
+            width: 300px;
+            margin: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: white;
+            transition: transform 0.2s;
+        }
+        .product-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .product-img {
+            height: 250px;
+            width: 100%;
+            object-fit: contain;  /* changed from cover to contain for full image visibility */
+            background: #f8f9fa; /* subtle background so transparent images look nice */
+        }
+        .product-info {
+            padding: 15px;
+        }
+        .nav-icon {
+            font-size: 22px;
+            margin-left: 15px;
+            color: #444;
+            cursor: pointer;
+        }
+        .nav-icon:hover {
+            color: #d63384;
+        }
+        .header-icons {
+            display: flex;
+            align-items: center;
+        }
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .product-header h5, .product-header span {
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="bg-light pb-5">
+  <nav class="navbar navbar-light bg-white shadow-sm">
+      <div class="container d-flex justify-content-between align-items-center">
+          <a class="navbar-brand" href="{{ url_for('home') }}">
+              <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="height: 60px;" />
+          </a>
+          <div class="header-icons">
+              {% if user %}
+                  <a href="{{ url_for('wallet') }}" class="nav-icon" title="Wallet">
+                      <i class="fa-solid fa-wallet"></i> ${{ "%.2f"|format(user.balance) }}
+                  </a>
+                  {% if user.is_admin %}
+                      <a href="{{ url_for('add_product') }}" class="nav-icon" title="Add Product">
+                          <i class="fa-solid fa-plus"></i>
+                      </a>
+                  {% endif %}
+                  <a href="{{ url_for('profile') }}" class="nav-icon" title="Profile">
+                      <i class="fa-solid fa-user"></i>
+                  </a>
+                  <a href="{{ url_for('cart') }}" class="nav-icon" title="Cart">
+                      <i class="fa-solid fa-cart-shopping"></i>
+                  </a>
+                  <a href="{{ url_for('logout') }}" class="nav-icon" title="Logout">
+                      <i class="fa-solid fa-right-from-bracket"></i>
+                  </a>
+              {% else %}
+                  <div class="d-flex gap-2">
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-dark">Login</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-dark">Register</a>
+                  </div>
+
+              {% endif %}
+          </div>
+      </div>
+  </nav>
+    {% block content %}
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

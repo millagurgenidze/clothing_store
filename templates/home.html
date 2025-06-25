@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex flex-wrap justify-content-center mt-4">
+    {% for product in products %}
+    <div class="product-card">
+        <a href="{{ url_for('product_detail', product_id=product.id) }}">
+            <img src="{{ url_for('static', filename=product.images[0].image_url) if product.images else url_for('static', filename='placeholder.jpg') }}"
+                 alt="{{ product.name }}" class="product-img" />
+        </a>
+        <div class="product-info">
+            <div class="product-header">
+                <h5>{{ product.name }}</h5>
+                <span class="text-success fw-bold">${{ "%.2f"|format(product.price) }}</span>
+            </div>
+            {% if user and user.is_admin %}
+            <a href="{{ url_for('edit_product', product_id=product.id) }}" class="btn btn-sm btn-outline-primary">
+                <i class="fa-solid fa-file-pen"></i> Edit
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
